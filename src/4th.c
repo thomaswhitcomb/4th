@@ -17,10 +17,16 @@ void execute(word_t *words){
     if((*words).number == LITERAL){
       words++;
       stack_push(*words);
-    }else{
+      words++;
+    }else if ((*words).number == COND_IF) {
+      words++; //step past the if
+      word_t w = stack_pop();
+      if(w.number == 0) words = words + ((*words).number);
+      else words++;
+    }else {
       (*words).code();
+      words++;
     }
-    words++;
   }
 }
 

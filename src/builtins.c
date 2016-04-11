@@ -30,16 +30,12 @@ void define(){
       word_t word;
       compiled[compiled_top++] = (word_t)COND_IF; // unconditional if
       word.ptr = (word_t *)compiled+compiled_top;
-      printf("if: %p %i \r\n",(word_t *)compiled+compiled_top,compiled_top);
       stack_push(word);
       compiled_top++;
     } else if(!strcmp(token,"then")){
       word_t x = stack_pop();
-      printf("pop: %p \r\n",x.ptr);
       word_t relative;
       relative.ptr = (union word_t_union *) (compiled+compiled_top - x.ptr);
-      printf("target: %p %i \r\n",(union word_t_union *)compiled+compiled_top,compiled_top);
-      printf("relative: %p \r\n",relative.ptr);
       (*x.ptr).number = relative.number;
     } else {
       words = compile(token);
