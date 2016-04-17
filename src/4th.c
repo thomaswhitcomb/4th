@@ -23,7 +23,6 @@ void execute(word_t *words,int count){
     }else if ((*words).number == COND_BRANCH) {
       words++; //step past the literal
       word_t w = stack_pop();
-      //printf("\r\nif cond %lu relative branch %lu",w.number,((*words).number));
       if(w.number == 0) words = words + ((*words).number);
       else words++;
     }else if ((*words).number == UNCOND_BRANCH) {
