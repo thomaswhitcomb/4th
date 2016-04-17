@@ -10,19 +10,25 @@
 #include "io.h"
 
 int state;
-void execute(word_t *words);
+void execute(word_t *words,int count);
 
-void execute(word_t *words){
-  while((*words).number != 0){
+void execute(word_t *words,int count){
+  word_t *end;
+  end = words + count;
+  while(words < end){
     if((*words).number == LITERAL){
       words++;
       stack_push(*words);
       words++;
-    }else if ((*words).number == COND_IF) {
-      words++; //step past the if
+    }else if ((*words).number == COND_BRANCH) {
+      words++; //step past the literal
       word_t w = stack_pop();
+      //printf("\r\nif cond %lu relative branch %lu",w.number,((*words).number));
       if(w.number == 0) words = words + ((*words).number);
       else words++;
+    }else if ((*words).number == UNCOND_BRANCH) {
+      words++; //step past the literal
+      words = words + ((*words).number);
     }else {
       (*words).code();
       words++;
@@ -33,7 +39,7 @@ void execute(word_t *words){
 int main(){
   word_t *words;
   char *token;
-  //fprintf(stderr,"Type `bye` - to exit.");
+  int count;
   set_raw_tty();
   builtins_init();
   state = STATE_EXECUTE;
@@ -42,7 +48,7 @@ int main(){
     if(!token){
       bye();
     }
-    words = compile(token);
-    execute(words);
+    words = compile(token,&count);
+    execute(words,count);
   }
 }

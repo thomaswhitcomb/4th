@@ -25,7 +25,6 @@ void bye(){
 void set_raw_tty(){
   int i = tcgetattr(STDIN_FILENO,&initial_ios);
   if(i != 0){
-    //fprintf(stderr,"tcgetattr failed: %d\n",i);
     raw_mode = 0;
     return;
   }

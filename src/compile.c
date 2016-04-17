@@ -18,16 +18,18 @@ static int all_digits(char *token){
   return 1;
 }
 
-word_t *compile(char *token){
+word_t *compile(char *token, int *count){
   word_t *existing_words;
+  dict_block *block;
   compiled_top = 0;
 
   if(token == NULL){
-    compiled[compiled_top++].number = 0;
+    *count = 0;
     return compiled;
   }
-  if((existing_words = search_dictionary(token)) != NULL){
-    while((*existing_words).number){
+  if((block = search_dictionary(token)) != NULL){
+    existing_words = block->words;
+    for(int i=0;i<block->count;i++){
       compiled[compiled_top++] = *existing_words;
       existing_words++;
     }
@@ -39,7 +41,6 @@ word_t *compile(char *token){
   } else{
     puts("crap error");
   }
-
-  compiled[compiled_top++].number = 0;
+  *count = compiled_top;
   return compiled;
 }

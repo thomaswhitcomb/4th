@@ -7,11 +7,13 @@
 extern int state;
 
 #define LITERAL 1L
-#define COND_IF 2L
-#define UNCOND_IF 3L
+#define COND_BRANCH 2L
+#define UNCOND_BRANCH 3L
 
 #define MAX_TOKEN_SIZE 7
 #define MAX_LINE_SIZE 72
+
+extern void bye();
 
 typedef void (*verb_sig)();
 typedef union word_t_union {

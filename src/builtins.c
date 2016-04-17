@@ -28,24 +28,38 @@ void define(){
     token = io_get_token();
     if(!strcmp(token,"if")){
       word_t word;
-      compiled[compiled_top++] = (word_t)COND_IF; // unconditional if
-      word.ptr = (word_t *)compiled+compiled_top;
+      compiled[compiled_top++] = (word_t)COND_BRANCH;
+      word.ptr = compiled+compiled_top;
       stack_push(word);
-      compiled_top++;
+      compiled_top++;  // step past word for relative branch
     } else if(!strcmp(token,"then")){
-      word_t x = stack_pop();
+      word_t word = stack_pop();
       word_t relative;
-      relative.ptr = (union word_t_union *) (compiled+compiled_top - x.ptr);
-      (*x.ptr).number = relative.number;
+      relative.ptr = (union word_t_union *) (compiled+compiled_top-word.ptr);
+      (*word.ptr).number = relative.number;
+    } else if(!strcmp(token,"else")){
+      word_t if_loc = stack_pop();  // get the if locationa
+
+      word_t word;
+      compiled[compiled_top++] = (word_t)UNCOND_BRANCH; // add uncondition branch to then
+      word.ptr = compiled+compiled_top;
+      stack_push(word);
+      compiled_top++;  // step past word for relative branch
+
+      word_t relative;
+      relative.ptr = (union word_t_union *) (compiled+compiled_top-if_loc.ptr);
+      (*if_loc.ptr).number = relative.number;
+
     } else {
-      words = compile(token);
-      while((*words).number){
+      int count;
+      words = compile(token,&count);
+      for(int i=0;i<count;i++){
         compiled[compiled_top++] = *words;
         words++;
       }
     }
   } while(strcmp(token,";") != 0);
-  add_dictionary_entry(verb,compiled);
+  add_dictionary_entry(verb,compiled_top,compiled);
 
 }
 void dot(){
@@ -126,8 +140,7 @@ void variable(){
   word_t *words = heap_get_words(3);
   words[0].number = LITERAL;
   words[1].ptr = heap_get_words(1);
-  words[2].number = 0;
-  add_dictionary_entry(var,words);
+  add_dictionary_entry(var,2,words);
 }
 
 void put(){
@@ -157,10 +170,9 @@ void dec() {
   //"nip",{(word_t) swap, (word_t) drop, 0},
   //"tuck",{(word_t) swap, (word_t) over, 0},
 void define_builtin(char *verb,verb_sig code){
-  word_t *words = heap_get_words(2);
+  word_t *words = heap_get_words(1);
   words[0].code = code;
-  words[1].number = 0;
-  add_dictionary_entry(verb,words);
+  add_dictionary_entry(verb,1,words);
 }
 
 void builtins_init(){
