@@ -137,7 +137,7 @@ void minus_rot(){
 
 void variable(){
   char *var = io_get_token();
-  word_t *words = heap_get_words(3);
+  word_t *words = heap_get_words(2);
   words[0].number = LITERAL;
   words[1].ptr = heap_get_words(1);
   add_dictionary_entry(var,2,words);

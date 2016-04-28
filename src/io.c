@@ -65,7 +65,7 @@ char * io_get_token(){
 
   int i = 0;
   while(bufr[pos] > 32){
-    if(i >= MAX_TOKEN_SIZE){
+    if(i >= MAX_TOKEN_SIZE - 1){
       printf("\r\nMaximum token size exceeded");
       bye();
     }
@@ -84,8 +84,8 @@ char * io_get_line(){
     puts(" ok");
     putchar('\r');
   }
-  last_char = 0;
   if(feof(stdin)) return NULL;
+  last_char = 0;
   while((c = getchar()) !=EOF) {
 
     if(i >= MAX_LINE_SIZE){
