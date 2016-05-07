@@ -22,4 +22,9 @@ typedef union word_t_union {
   verb_sig code;
 } word_t;
 
+typedef struct {
+  word_t word;
+  char type;
+} word_struct_t;
+
 #endif

@@ -39,6 +39,8 @@ int main(){
   word_t *words;
   char *token;
   int count;
+  printf("word_t size is %lu\n",sizeof(word_t));
+  printf("word_struct_t size is %lu\n",sizeof(word_struct_t));
   set_raw_tty();
   builtins_init();
   state = STATE_EXECUTE;
