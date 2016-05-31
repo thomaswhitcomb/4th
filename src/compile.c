@@ -5,6 +5,7 @@
 #include <stack.h>
 #include "dictionary.h"
 #include "io.h"
+#include "heap.h"
 #include "compile.h"
 
 static word_t compiled[25];
@@ -18,21 +19,18 @@ static int all_digits(char *token){
   return 1;
 }
 
-word_t *compile(char *token, int *count){
+word_t *compile(char *token){
   word_t *existing_words;
-  dict_block *block;
   compiled_top = 0;
 
   if(token == NULL){
-    *count = 0;
-    return compiled;
+    word_t *words = heap_get_words(1);
+    words->number = 0;
+    return words;
   }
-  if((block = search_dictionary(token)) != NULL){
-    existing_words = block->words;
-    for(int i=0;i<block->count;i++){
-      compiled[compiled_top++] = *existing_words;
-      existing_words++;
-    }
+  if((existing_words = search_dictionary(token)) != NULL){
+    compiled[compiled_top++] = (word_t)RUN_COMPOSED; // literal
+    compiled[compiled_top++].ptr = existing_words;
   } else if(all_digits(token)){
     word_t si;
     si.number = atoi(token);
@@ -41,6 +39,6 @@ word_t *compile(char *token, int *count){
   } else{
     puts("crap error");
   }
-  *count = compiled_top;
+  compiled[compiled_top++].number = 0;
   return compiled;
 }

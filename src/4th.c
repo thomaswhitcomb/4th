@@ -10,12 +10,18 @@
 #include "io.h"
 
 int state;
-void execute(word_t *words,int count);
+void execute(word_t *words);
 
-void execute(word_t *words,int count){
-  word_t *end;
-  end = words + count;
-  while(words < end){
+void execute(word_t *words){
+//  word_t *loc;
+//  loc = words;
+//  printf(" - ");
+//  while((*loc).number){
+//    printf("%ld ",(*loc).number);
+//    loc++;
+//  }
+//  printf("will execute ");
+  while((*words).number){
     if((*words).number == LITERAL){
       words++;
       stack_push(*words);
@@ -28,8 +34,17 @@ void execute(word_t *words,int count){
     }else if ((*words).number == UNCOND_BRANCH) {
       words++; //step past the literal
       words = words + ((*words).number);
-    }else {
+    }else if ((*words).number == RUN_NATIVE) {
+      words++;
       (*words).code();
+      words++;
+    }else if ((*words).number == RUN_COMPOSED) {
+      words++;
+      execute(words->ptr);
+      words++;
+    }
+    else {
+      printf("execute - dont recognize %ld\n",((*words).number));
       words++;
     }
   }
@@ -38,9 +53,7 @@ void execute(word_t *words,int count){
 int main(){
   word_t *words;
   char *token;
-  int count;
   printf("word_t size is %lu\n",sizeof(word_t));
-  printf("word_struct_t size is %lu\n",sizeof(word_struct_t));
   set_raw_tty();
   builtins_init();
   state = STATE_EXECUTE;
@@ -49,7 +62,7 @@ int main(){
     if(!token){
       bye();
     }
-    words = compile(token,&count);
-    execute(words,count);
+    words = compile(token);
+    execute(words);
   }
 }
