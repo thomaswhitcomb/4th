@@ -31,7 +31,9 @@ void run_native(word_t word_code_ptr){
 word_t *compile(char *token){
   word_t *existing_words;
   compiled_top = 0;
-
+#ifdef DEBUG
+  printf(" compiling %s ",token);
+#endif
   if(token == NULL){
     word_t *words = heap_get_words(1);
     words->number = 0;
@@ -46,8 +48,18 @@ word_t *compile(char *token){
     compiled[compiled_top++].run = stack_push;
     compiled[compiled_top++].number = si.number;
   } else{
-    puts("crap error");
+    printf(" crap error ");
   }
   compiled[compiled_top++].number = 0;
+#ifdef DEBUG
+  word_t *loc = compiled;
+  printf(" compile ");
+  while((*loc).number){
+    printf("%ld ",(*loc).number);
+    loc++;
+    printf("%ld ",(*loc).number);
+    loc++;
+  }
+#endif
   return compiled;
 }

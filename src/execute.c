@@ -10,14 +10,18 @@ void execute(word_t words);
 
 void execute(word_t x){
   word_t *words = x.ptr;
-//  word_t *loc;
-//  loc = words;
-//  printf(" - ");
-//  while((*loc).number){
-//    printf("%ld ",(*loc).number);
-//    loc++;
-//  }
-//  printf("will execute ");
+
+#ifdef DEBUG
+  word_t *loc = words;
+  printf(" execute ");
+  while((*loc).number){
+    printf("%ld ",(*loc).number);
+    loc++;
+    printf("%ld ",(*loc).number);
+    loc++;
+  }
+#endif
+
   while((*words).number){
     switch((*words).number) {
       case COND_BRANCH :
@@ -30,7 +34,7 @@ void execute(word_t x){
         words++; //step past the literal
         words = words + ((*words).number);
         break;
-      default :  
+      default :
         (*words).run(*(words+1));
         words = words + 2;
     }
