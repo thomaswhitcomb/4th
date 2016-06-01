@@ -22,30 +22,35 @@ void execute(word_t *words){
 //  }
 //  printf("will execute ");
   while((*words).number){
-    if((*words).number == LITERAL){
-      words++;
-      stack_push(*words);
-      words++;
-    }else if ((*words).number == COND_BRANCH) {
-      words++; //step past the literal
-      word_t w = stack_pop();
-      if(w.number == 0) words = words + ((*words).number);
-      else words++;
-    }else if ((*words).number == UNCOND_BRANCH) {
-      words++; //step past the literal
-      words = words + ((*words).number);
-    }else if ((*words).number == RUN_NATIVE) {
-      words++;
-      (*words).code();
-      words++;
-    }else if ((*words).number == RUN_COMPOSED) {
-      words++;
-      execute(words->ptr);
-      words++;
-    }
-    else {
-      printf("execute - dont recognize %ld\n",((*words).number));
-      words++;
+    switch((*words).number) {
+      case LITERAL :
+        words++;
+        stack_push(*words);
+        words++;
+        break;
+      case COND_BRANCH :
+        words++; //step past the literal
+        word_t w = stack_pop();
+        if(w.number == 0) words = words + ((*words).number);
+        else words++;
+        break;
+      case UNCOND_BRANCH :
+        words++; //step past the literal
+        words = words + ((*words).number);
+        break;
+      case RUN_NATIVE :
+        words++;
+        (*words).code();
+        words++;
+        break;
+      case RUN_COMPOSED :
+        words++;
+        execute(words->ptr);
+        words++;
+        break;
+      default :  
+        printf("execute - dont recognize %ld\n",((*words).number));
+        words++;
     }
   }
 }
