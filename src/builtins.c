@@ -153,7 +153,7 @@ void minus_rot(){
 void variable(){
   char *var = io_get_token();
   word_t *words = heap_get_words(3);
-  words[0].number = LITERAL;
+  words[0].run = stack_push;
   words[1].ptr = heap_get_words(1);
   words[2].number = 0;
   add_dictionary_entry(var,words);
@@ -185,9 +185,9 @@ void dec() {
   //"-rot",{(word_t) rot, (word_t) rot, 0},
   //"nip",{(word_t) swap, (word_t) drop, 0},
   //"tuck",{(word_t) swap, (word_t) over, 0},
-void define_builtin(char *verb,verb_sig code){
+void define_builtin(char *verb,native_sig code){
   word_t *words = heap_get_words(3);
-  words[0].number = RUN_NATIVE;
+  words[0].run = run_native;
   words[1].code = code;
   words[2].number = 0;
   add_dictionary_entry(verb,words);

@@ -6,6 +6,7 @@
 #include "dictionary.h"
 #include "io.h"
 #include "heap.h"
+#include "execute.h"
 #include "compile.h"
 
 static word_t compiled[25];
@@ -19,6 +20,14 @@ static int all_digits(char *token){
   return 1;
 }
 
+void push_literal(word_t word){
+  stack_push(word);
+}
+
+void run_native(word_t word_code_ptr){
+    word_code_ptr.code();
+}
+
 word_t *compile(char *token){
   word_t *existing_words;
   compiled_top = 0;
@@ -29,13 +38,13 @@ word_t *compile(char *token){
     return words;
   }
   if((existing_words = search_dictionary(token)) != NULL){
-    compiled[compiled_top++] = (word_t)RUN_COMPOSED; // literal
+    compiled[compiled_top++].run = execute;
     compiled[compiled_top++].ptr = existing_words;
   } else if(all_digits(token)){
     word_t si;
     si.number = atoi(token);
-    compiled[compiled_top++] = (word_t)LITERAL; // literal
-    compiled[compiled_top++] = si;
+    compiled[compiled_top++].run = stack_push;
+    compiled[compiled_top++].number = si.number;
   } else{
     puts("crap error");
   }
