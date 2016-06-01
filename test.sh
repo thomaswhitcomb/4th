@@ -19,8 +19,5 @@ echo ": x 1 0 if if 1 else 2 then else  if 3 else 4 then then ; x .s" | ./4th  |
 echo ": x 0 1 if if 1 else 2 then else  if 3 else 4 then then ; x .s" | ./4th  | if egrep -q '^ <1> 2 ok' ; then echo yes; else echo no; fi
 echo ": x 1 1 if if 1 else 2 then else  if 3 else 4 then then ; x .s" | ./4th  | if egrep -q '^ <1> 1 ok' ; then echo yes; else echo no; fi
 #
-#echo "variable eggs 2 eggs ! 3 eggs +! eggs @ .s" | ./4th -s | if egrep -q '^5 $' ; then echo yes; else echo no; fi
-#
-#echo ": $$ dup @ rot + swap ! ; variable eggs 2 eggs ! 3 eggs $$ eggs @ .S" | ./4th -s | if egrep -q '^5 $' ; then echo yes; else echo no; fi
-#echo "variable xyz 3 xyz ! 6 xyz dup @ rot + swap ! xyz ?" | ./4th -s | if egrep -q '^9 $' ; then echo yes; else echo no; fi
-#echo ": my+! dup @ rot + swap ! ; variable xyz 3 xyz ! 6 xyz my+! xyz ?" | ./4th -s | if egrep -q '^9 $' ; then echo yes; else echo no; fi
+echo "variable xyz 3 xyz ! 6 xyz dup @ rot + swap ! xyz @ .s" | ./4th -s | if egrep -q '^ <1> 9 ok' ; then echo yes; else echo no; fi
+echo ": +! dup @ rot + swap ! ; variable xyz 3 xyz ! 6 xyz +! xyz @ .s" | ./4th -s | if egrep -q '^ <1> 9 ok' ; then echo yes; else echo no; fi
