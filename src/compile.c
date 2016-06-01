@@ -5,6 +5,8 @@
 #include <stack.h>
 #include "dictionary.h"
 #include "io.h"
+#include "heap.h"
+#include "execute.h"
 #include "compile.h"
 
 static word_t compiled[25];
@@ -18,29 +20,34 @@ static int all_digits(char *token){
   return 1;
 }
 
-word_t *compile(char *token, int *count){
+void push_literal(word_t word){
+  stack_push(word);
+}
+
+void run_native(word_t word_code_ptr){
+    word_code_ptr.code();
+}
+
+word_t *compile(char *token){
   word_t *existing_words;
-  dict_block *block;
   compiled_top = 0;
 
   if(token == NULL){
-    *count = 0;
-    return compiled;
+    word_t *words = heap_get_words(1);
+    words->number = 0;
+    return words;
   }
-  if((block = search_dictionary(token)) != NULL){
-    existing_words = block->words;
-    for(int i=0;i<block->count;i++){
-      compiled[compiled_top++] = *existing_words;
-      existing_words++;
-    }
+  if((existing_words = search_dictionary(token)) != NULL){
+    compiled[compiled_top++].run = execute;
+    compiled[compiled_top++].ptr = existing_words;
   } else if(all_digits(token)){
     word_t si;
     si.number = atoi(token);
-    compiled[compiled_top++] = (word_t)LITERAL; // literal
-    compiled[compiled_top++] = si;
+    compiled[compiled_top++].run = stack_push;
+    compiled[compiled_top++].number = si.number;
   } else{
     puts("crap error");
   }
-  *count = compiled_top;
+  compiled[compiled_top++].number = 0;
   return compiled;
 }

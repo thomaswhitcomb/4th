@@ -2,6 +2,7 @@
 #define _compile_h_
 #include "common.h"
 
-word_t *compile(char *token,int *count);
+void run_native(word_t word_code_ptr);
+word_t *compile(char *token);
 
 #endif

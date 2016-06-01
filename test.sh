@@ -9,6 +9,7 @@ echo "2 3 5 swap 6 dup .s" | ./4th | if egrep -q '^ <5> 2 5 3 6 6 ok' ; then ech
 echo "2 3 5 swap 6 dup . . .s" | ./4th | if egrep -q '^ 6 6 <3> 2 5 3 ok' ; then echo yes; else echo no; fi
 echo "1 2 3 drop .s" | ./4th | if egrep -q '^ <2> 1 2 ok' ; then echo yes; else echo no; fi
 #
+echo ": x 1 if 3 then 5 3 + ; x .s" | ./4th  | if egrep -q '^ <2> 3 8 ok' ; then echo yes; else echo no; fi
 echo ": x 1 if 5 3 * then 5 3 + ; x .s" | ./4th  | if egrep -q '^ <2> 15 8 ok' ; then echo yes; else echo no; fi
 echo ": x 0 if 5 3 * then 5 3 + ; x .s" | ./4th  | if egrep -q '^ <1> 8 ok' ; then echo yes; else echo no; fi
 echo ": x 0 if 5 3 * else 5 3 + then ; x .s" | ./4th  | if egrep -q '^ <1> 8 ok' ; then echo yes; else echo no; fi
