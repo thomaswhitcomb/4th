@@ -9,6 +9,8 @@
 #include "compile.h"
 #include "io.h"
 
+#define MAX_WORDS_IN_DEFINE 50
+
 void define_end(){
   state = STATE_EXECUTE;
   #ifdef DEBUG
@@ -20,7 +22,7 @@ void define(){
 
   state = STATE_COMPILE;
 
-  word_t *compiled = heap_get_words(25);
+  word_t *compiled = heap_get_words(MAX_WORDS_IN_DEFINE);
   int compiled_top = 0;
   word_t *words;
   char *s = io_get_token();
@@ -59,6 +61,10 @@ void define(){
         compiled[compiled_top++] = *words++;
         compiled[compiled_top++] = *words++;
       }
+    }
+    if(compiled_top > MAX_WORDS_IN_DEFINE){
+      fprintf(stderr, "\r\nMax compose exceeded\n");
+      bye();
     }
   } while(strcmp(token,";") != 0);
   compiled[compiled_top++].number = 0;
