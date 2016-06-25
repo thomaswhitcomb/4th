@@ -5,7 +5,6 @@
 #include "stack.h"
 #include "builtins.h"
 
-int state;
 void execute(word_t words);
 
 void execute(word_t x){
