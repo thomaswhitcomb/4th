@@ -25,4 +25,6 @@ typedef union word_t_union {
   void (*run)(union word_t_union value);
 } word_t;
 
+void push_literal(word_t word);
+
 #endif

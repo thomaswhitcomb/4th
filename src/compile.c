@@ -3,6 +3,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <stack.h>
+#include "common.h"
 #include "dictionary.h"
 #include "io.h"
 #include "heap.h"
@@ -18,10 +19,6 @@ static int all_digits(char *token){
     token++;
   }
   return 1;
-}
-
-void push_literal(word_t word){
-  stack_push(word);
 }
 
 void run_native(word_t word_code_ptr){
@@ -45,7 +42,7 @@ word_t *compile(char *token){
   } else if(all_digits(token)){
     word_t si;
     si.number = atoi(token);
-    compiled[compiled_top++].run = stack_push;
+    compiled[compiled_top++].run = push_literal;
     compiled[compiled_top++].number = si.number;
   } else{
     printf(" crap error ");

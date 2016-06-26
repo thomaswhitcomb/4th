@@ -19,6 +19,13 @@ static int compiled_top;
 static char* verb;
 static word_t *compiled = NULL;
 
+stack_tt data_stack = {.top = -1};
+stack_tt return_stack = {.top = -1};
+
+void push_literal(word_t word){
+  stack_push(&data_stack,word);
+}
+
 void define_end(){
   state = STATE_EXECUTE;
   add_dictionary_entry(verb,compiled);
@@ -98,20 +105,20 @@ void process_token(char *token){
         word_t word;
         compiled[compiled_top++].number = COND_BRANCH;
         word.ptr = compiled+compiled_top;
-        stack_push(word);
+        stack_push(&data_stack,word);
         compiled_top++;  // step past word for relative branch
       } else if(!strcmp(token,"then")){
-        word_t word = stack_pop();
+        word_t word = stack_pop(&data_stack);
         word_t relative;
         relative.ptr = (union word_t_union *) (compiled+compiled_top-word.ptr);
         (*word.ptr).number = relative.number;
       } else if(!strcmp(token,"else")){
-        word_t if_loc = stack_pop();  // get the if locationa
+        word_t if_loc = stack_pop(&data_stack);  // get the if locationa
 
         word_t word;
         compiled[compiled_top++].number = UNCOND_BRANCH; // add uncondition branch to then
         word.ptr = compiled+compiled_top;
-        stack_push(word);
+        stack_push(&data_stack,word);
         compiled_top++;  // step past word for relative branch
 
         word_t relative;

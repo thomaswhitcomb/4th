@@ -12,108 +12,107 @@
 #define MAX_WORDS_IN_DEFINE 50
 
 void dot(){
-  word_t x = stack_pop();
+  word_t x = stack_pop(&data_stack);
   printf(" %lu",x.number);
 }
 
 void drop(){
-  stack_pop();
+  stack_pop(&data_stack);
 }
 void dup(){
-  word_t x = stack_pop();
-  stack_push(x);
-  stack_push(x);
+  word_t x = stack_pop(&data_stack);
+  stack_push(&data_stack,x);
+  stack_push(&data_stack,x);
 }
 void plus(){
-  word_t x = stack_pop();
-  word_t y = stack_pop();
+  word_t x = stack_pop(&data_stack);
+  word_t y = stack_pop(&data_stack);
   word_t si;
   si.number = x.number + y.number;
-  stack_push(si);
+  stack_push(&data_stack,si);
 }
 void minus(){
-  word_t x = stack_pop();
-  word_t y = stack_pop();
+  word_t x = stack_pop(&data_stack);
+  word_t y = stack_pop(&data_stack);
   word_t si;
   si.number = y.number - x.number;
-  stack_push(si);
+  stack_push(&data_stack,si);
 }
 void times(){
-  word_t x = stack_pop();
-  word_t y = stack_pop();
+  word_t x = stack_pop(&data_stack);
+  word_t y = stack_pop(&data_stack);
   word_t si;
   si.number = y.number * x.number;
-  stack_push(si);
+  stack_push(&data_stack,si);
 }
 void modulo(){
-  word_t x = stack_pop();
-  word_t y = stack_pop();
+  word_t x = stack_pop(&data_stack);
+  word_t y = stack_pop(&data_stack);
   word_t si;
   si.number = y.number % x.number;
-  stack_push(si);
+  stack_push(&data_stack,si);
 }
 void swap(){
-  word_t x = stack_pop();
-  word_t y = stack_pop();
-  stack_push(x);
-  stack_push(y);
+  word_t x = stack_pop(&data_stack);
+  word_t y = stack_pop(&data_stack);
+  stack_push(&data_stack,x);
+  stack_push(&data_stack,y);
 }
 
 void over(){
-  word_t x = stack_pop();
-  word_t y = stack_pop();
-  stack_push(y);
-  stack_push(x);
-  stack_push(y);
+  word_t x = stack_pop(&data_stack);
+  word_t y = stack_pop(&data_stack);
+  stack_push(&data_stack,y);
+  stack_push(&data_stack,x);
+  stack_push(&data_stack,y);
 }
 
 void rot(){
-  word_t x = stack_pop();
-  word_t y = stack_pop();
-  word_t z = stack_pop();
-  stack_push(y);
-  stack_push(x);
-  stack_push(z);
+  word_t x = stack_pop(&data_stack);
+  word_t y = stack_pop(&data_stack);
+  word_t z = stack_pop(&data_stack);
+  stack_push(&data_stack,y);
+  stack_push(&data_stack,x);
+  stack_push(&data_stack,z);
 }
 void minus_rot(){
-  word_t x = stack_pop();
-  word_t y = stack_pop();
-  word_t z = stack_pop();
-  stack_push(x);
-  stack_push(z);
-  stack_push(y);
+  word_t x = stack_pop(&data_stack);
+  word_t y = stack_pop(&data_stack);
+  word_t z = stack_pop(&data_stack);
+  stack_push(&data_stack,x);
+  stack_push(&data_stack,z);
+  stack_push(&data_stack,y);
 }
-
 void variable(){
   char *var = io_get_token();
   word_t *words = heap_get_words(3);
-  words[0].run = stack_push;
+  words[0].run = push_literal;
   words[1].ptr = heap_get_words(1);
   words[2].number = 0;
   add_dictionary_entry(var,words);
 }
 
 void put(){
-  word_t loc = stack_pop();
-  word_t value = stack_pop();
+  word_t loc = stack_pop(&data_stack);
+  word_t value = stack_pop(&data_stack);
   ((word_t *)loc.ptr)->number = value.number;
 }
 
 void get(){
-  word_t addr = stack_pop();
+  word_t addr = stack_pop(&data_stack);
   word_t w = *(word_t *)(addr.ptr);
-  stack_push(w);
+  stack_push(&data_stack,w);
 }
 
 void inc() {
-  word_t value = stack_pop();
+  word_t value = stack_pop(&data_stack);
   value.number = value.number + 1;
-  stack_push(value);
+  stack_push(&data_stack,value);
 }
 void dec() {
-  word_t value = stack_pop();
+  word_t value = stack_pop(&data_stack);
   value.number = value.number - 1;
-  stack_push(value);
+  stack_push(&data_stack,value);
 }
 
   //"-rot",{(word_t) rot, (word_t) rot, 0},
@@ -125,6 +124,10 @@ void define_builtin(char *verb,native_sig code){
   words[1].code = code;
   words[2].number = 0;
   add_dictionary_entry(verb,words);
+}
+
+void stack_dot_s(){
+  stack_print(&data_stack);
 }
 
 void builtins_init(){

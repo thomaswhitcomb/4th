@@ -25,7 +25,7 @@ void execute(word_t x){
     switch((*words).number) {
       case COND_BRANCH :
         words++; //step past the literal
-        word_t w = stack_pop();
+        word_t w = stack_pop(&data_stack);
         if(w.number == 0) words = words + ((*words).number);
         else words++;
         break;
