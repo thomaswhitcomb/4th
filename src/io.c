@@ -98,9 +98,16 @@ char * io_get_line(){
       last_char = c;
       return stmt;
     }
-    stmt[i++] = c;
+    if(c == 127){
+      if(i>0){
+        i--;
+        printf("\b");
+      }
+    } else{
+      stmt[i++] = c;
+    }
     if(raw_mode){
-      putchar(c);
+     putchar(c);
     }
   }
   return NULL;
