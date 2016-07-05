@@ -11,6 +11,16 @@
 
 #define MAX_WORDS_IN_DEFINE 50
 
+void run_native(word_t word_code_ptr){
+      word_code_ptr.code();
+}
+
+void read(){
+  word_t word;
+  word.char_ptr = io_get_token();
+  stack_push(&data_stack,word);
+}
+
 void dot(){
   word_t x = stack_pop(&data_stack);
   printf(" %lu",x.number);
@@ -148,4 +158,5 @@ void builtins_init(){
   define_builtin("dec",dec);
   define_builtin("bye",bye);
   define_builtin(".",dot);
+  define_builtin("read",read);
 }

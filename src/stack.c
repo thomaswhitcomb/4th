@@ -7,7 +7,7 @@ void stack_push(stack_tt *stack,word_t item){
   stack->top ++;
   if(stack->top >= STACK_SIZE){
     fprintf(stderr, "Stack full. %d elements\n",stack->top);
-    exit(EXIT_FAILURE);
+    bye();
   }
   stack->stack[stack->top] = item;
 }

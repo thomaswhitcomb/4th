@@ -23,6 +23,7 @@ typedef union word_t_union {
   union word_t_union *ptr;
   native_sig code;
   void (*run)(union word_t_union value);
+  char *char_ptr;
 } word_t;
 
 void push_literal(word_t word);

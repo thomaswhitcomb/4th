@@ -36,6 +36,7 @@ void define(){
   compiled_top = 0;
   compiled = heap_get_words(MAX_WORDS_IN_DEFINE);
   verb_needed = 1;
+  printf("done in define\n");
 }
 
 char composed[][80] = {
@@ -44,8 +45,8 @@ char composed[][80] = {
   ,{0}
 };
 
-void process_token(char *);
-void process_line(char *);
+void run_token(char *);
+void run_line(char *);
 void load_composed();
 
 int main(){
@@ -58,34 +59,39 @@ int main(){
   define_builtin(";",define_end);
   printf("builtins loaded\n");
   load_composed();
-  //process_line(composed[0]);
+  //run_line(composed[0]);
   printf("composed loaded\n");
 
   set_raw_tty();
   state = STATE_EXECUTE;
   while(1){
-    token = io_get_token();
-    process_token(token);
+
+    word_t word;
+    word.ptr = compile("read");
+    execute(word);
+
+    word = stack_pop(&data_stack);
+    run_token(word.char_ptr);
   }
 }
 
 void load_composed(){
   int i = 0;
   while(composed[i][0] != 0){
-    process_line(composed[i]);
+    run_line(composed[i]);
     i=i+1;
   }
 }
 
-void process_line(char *line){
+void run_line(char *line){
   char *token;
   token = strtok(line," ");
   do{
-    process_token(token);
+    run_token(token);
   } while ((token = strtok(NULL," ")) != NULL);
 }
 
-void process_token(char *token){
+void run_token(char *token){
   if(!token){
     bye();
   }
@@ -95,6 +101,7 @@ void process_token(char *token){
     execute(word);
   } else {
     if(verb_needed){
+      printf("verb needed %s\n",token);
       verb = (char *)heap_get(strlen(token)+1);
       strcpy(verb,token);
       verb_needed = 0;
