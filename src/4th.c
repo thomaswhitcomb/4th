@@ -27,8 +27,16 @@ void push_literal(word_t word){
 }
 
 void define_end(){
+  word_t word;
   state = STATE_EXECUTE;
-  add_dictionary_entry(verb,compiled);
+
+  word.ptr = compiled;
+  stack_push(&data_stack,word);
+
+  word.char_ptr = verb;
+  stack_push(&data_stack,word);
+
+  add_dictionary_entry();
 }
 
 void define(){
@@ -36,7 +44,6 @@ void define(){
   compiled_top = 0;
   compiled = heap_get_words(MAX_WORDS_IN_DEFINE);
   verb_needed = 1;
-  printf("done in define\n");
 }
 
 char composed[][80] = {
@@ -57,10 +64,8 @@ int main(){
   builtins_init();
   define_builtin(":",define);
   define_builtin(";",define_end);
-  printf("builtins loaded\n");
+
   load_composed();
-  //run_line(composed[0]);
-  printf("composed loaded\n");
 
   set_raw_tty();
   state = STATE_EXECUTE;
@@ -101,7 +106,6 @@ void run_token(char *token){
     execute(word);
   } else {
     if(verb_needed){
-      printf("verb needed %s\n",token);
       verb = (char *)heap_get(strlen(token)+1);
       strcpy(verb,token);
       verb_needed = 0;

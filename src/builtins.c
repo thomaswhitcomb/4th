@@ -94,12 +94,21 @@ void minus_rot(){
   stack_push(&data_stack,y);
 }
 void variable(){
+  word_t word;
   char *var = io_get_token();
   word_t *words = heap_get_words(3);
   words[0].run = push_literal;
   words[1].ptr = heap_get_words(1);
   words[2].number = 0;
-  add_dictionary_entry(var,words);
+
+
+  word.ptr = words;
+  stack_push(&data_stack,word);
+
+  word.char_ptr = var;
+  stack_push(&data_stack,word);
+
+  add_dictionary_entry();
 }
 
 void put(){
@@ -129,11 +138,19 @@ void dec() {
   //"nip",{(word_t) swap, (word_t) drop, 0},
   //"tuck",{(word_t) swap, (word_t) over, 0},
 void define_builtin(char *verb,native_sig code){
+  word_t word;
   word_t *words = heap_get_words(3);
   words[0].run = run_native;
   words[1].code = code;
   words[2].number = 0;
-  add_dictionary_entry(verb,words);
+
+  word.ptr = words;
+  stack_push(&data_stack,word);
+
+  word.char_ptr = verb;
+  stack_push(&data_stack,word);
+
+  add_dictionary_entry();
 }
 
 void stack_dot_s(){
