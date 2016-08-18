@@ -11,8 +11,9 @@
 
 #define MAX_WORDS_IN_DEFINE 50
 
-void run_native(word_t word_code_ptr){
-      word_code_ptr.code();
+void run_native(){
+      word_t word = stack_pop(&data_stack);
+      word.code();
 }
 
 void read(){
@@ -97,7 +98,7 @@ void variable(){
   word_t word;
   char *var = io_get_token();
   word_t *words = heap_get_words(3);
-  words[0].run = push_literal;
+  words[0].code = push_literal;
   words[1].ptr = heap_get_words(1);
   words[2].number = 0;
 
@@ -140,7 +141,7 @@ void dec() {
 void define_builtin(char *verb,native_sig code){
   word_t word;
   word_t *words = heap_get_words(3);
-  words[0].run = run_native;
+  words[0].code = run_native;
   words[1].code = code;
   words[2].number = 0;
 

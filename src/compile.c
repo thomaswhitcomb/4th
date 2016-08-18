@@ -34,12 +34,12 @@ word_t *compile(char *token){
   existing_words = word.ptr;
 
   if(existing_words != NULL){
-    compiled[compiled_top++].run = execute;
+    compiled[compiled_top++].code = execute;
     compiled[compiled_top++].ptr = existing_words;
   } else if(all_digits(token)){
     word_t si;
     si.number = atoi(token);
-    compiled[compiled_top++].run = push_literal;
+    compiled[compiled_top++].code = push_literal;
     compiled[compiled_top++].number = si.number;
   } else{
     printf(" compile problem ");

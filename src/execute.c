@@ -4,11 +4,11 @@
 #include "common.h"
 #include "stack.h"
 #include "builtins.h"
+#include "execute.h"
 
-void execute(word_t words);
-
-void execute(word_t x){
-  word_t *words = x.ptr;
+void execute(){
+  word_t word = stack_pop(&data_stack);
+  word_t *words = word.ptr;
 
 #ifdef DEBUG
   word_t *loc = words;
@@ -34,7 +34,8 @@ void execute(word_t x){
         words = words + ((*words).number);
         break;
       default :
-        (*words).run(*(words+1));
+        stack_push(&data_stack,*(words+1));
+        (*words).code();
         words = words + 2;
     }
   }

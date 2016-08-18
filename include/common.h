@@ -22,7 +22,6 @@ typedef union word_t_union {
   long number;
   union word_t_union *ptr;
   native_sig code;
-  void (*run)(union word_t_union value);
   char *char_ptr;
 } word_t;
 

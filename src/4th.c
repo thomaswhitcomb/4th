@@ -22,8 +22,8 @@ static word_t *compiled = NULL;
 stack_tt data_stack = {.top = -1};
 stack_tt return_stack = {.top = -1};
 
-void push_literal(word_t word){
-  stack_push(&data_stack,word);
+void push_literal(){
+  //stack_push(&data_stack,word);
 }
 
 void define_end(){
@@ -55,7 +55,7 @@ char composed[][80] = {
 void run_token(char *);
 void run_line(char *);
 void load_composed();
-
+void read();
 int main(){
   char *token;
   state = STATE_EXECUTE;
@@ -65,17 +65,18 @@ int main(){
   define_builtin(":",define);
   define_builtin(";",define_end);
 
-  load_composed();
+  //load_composed();
 
   set_raw_tty();
   state = STATE_EXECUTE;
   while(1){
 
     word_t word;
-    word.ptr = compile("read");
-    execute(word);
-
+    //word.ptr = compile("read");
+    //execute(word);
+    read();
     word = stack_pop(&data_stack);
+
     run_token(word.char_ptr);
   }
 }
@@ -103,7 +104,8 @@ void run_token(char *token){
   if(state == STATE_EXECUTE){
     word_t word;
     word.ptr = compile(token);
-    execute(word);
+    stack_push(&data_stack,word);
+    execute();
   } else {
     if(verb_needed){
       verb = (char *)heap_get(strlen(token)+1);
@@ -139,7 +141,8 @@ void run_token(char *token){
       } else if(!strcmp(token,";")){
         word_t word;
         word.ptr = compile(token);
-        execute(word);
+        stack_push(&data_stack,word);
+        execute();
       } else {
         word_t *words = compile(token);
         while((*words).number != 0){
