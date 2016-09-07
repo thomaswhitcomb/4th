@@ -134,6 +134,10 @@ void dec() {
   value.number = value.number - 1;
   stack_push(&data_stack,value);
 }
+void emit() {
+  word_t value = stack_pop(&data_stack);
+  printf("%c",(int)value.number);
+}
 
   //"-rot",{(word_t) rot, (word_t) rot, 0},
   //"nip",{(word_t) swap, (word_t) drop, 0},
@@ -158,6 +162,22 @@ void stack_dot_s(){
   stack_print(&data_stack);
 }
 
+void data_to_return_stack(){
+  word_t value = stack_pop(&data_stack);
+  stack_push(&return_stack,value);
+}
+
+void return_to_data_stack(){
+  word_t value = stack_pop(&return_stack);
+  stack_push(&data_stack,value);
+}
+
+void copy_return_stack(){
+  word_t value = stack_pop(&return_stack);
+  stack_push(&data_stack,value);
+  stack_push(&return_stack,value);
+}
+
 void builtins_init(){
   define_builtin(".s",stack_dot_s);
   define_builtin("+",plus);
@@ -177,4 +197,8 @@ void builtins_init(){
   define_builtin("bye",bye);
   define_builtin(".",dot);
   define_builtin("read",read);
+  define_builtin("emit",emit);
+  define_builtin(">r",data_to_return_stack);
+  define_builtin("r>",return_to_data_stack);
+  define_builtin("r@",copy_return_stack);
 }

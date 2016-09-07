@@ -95,6 +95,7 @@ char * io_get_line(){
 
     if(c == 10 || c == 13) {
       stmt[i++] = '\0';
+      printf(" ");
       last_char = c;
       return stmt;
     }

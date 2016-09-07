@@ -30,7 +30,7 @@ void add_dictionary_entry(){
   word_t words;
   verb = (stack_pop(&data_stack)).char_ptr;
   words = stack_pop(&data_stack);
-  printf("adding %s\n",verb);
+  //printf("adding %s\n",verb);
   int l = strlen(verb);
   char* chars = (char *)heap_get(l+1);
   strcpy(chars,verb);

@@ -49,6 +49,7 @@ void define(){
 char composed[][80] = {
    {": rot3 rot rot rot ;"}
   ,{": +! dup @ rot + swap ! ;"}
+  ,{": quadratic >r swap rot r@ * + r> * + ;"}
   ,{0}
 };
 
@@ -65,7 +66,7 @@ int main(){
   define_builtin(":",define);
   define_builtin(";",define_end);
 
-  //load_composed();
+  load_composed();
 
   set_raw_tty();
   state = STATE_EXECUTE;
@@ -120,6 +121,12 @@ void run_token(char *token){
         word.ptr = compiled+compiled_top;
         stack_push(&data_stack,word);
         compiled_top++;  // step past word for relative branch
+      } else if(!strcmp(token,"do")){
+        word_t word;
+        compiled[compiled_top++].number = COND_BRANCH;
+        word.ptr = compiled+compiled_top;
+        stack_push(&data_stack,word);
+        compiled_top++;  // step past word for relative branch
       } else if(!strcmp(token,"then")){
         word_t word = stack_pop(&data_stack);
         word_t relative;
@@ -138,6 +145,16 @@ void run_token(char *token){
         relative.ptr = (union word_t_union *) (compiled+compiled_top-if_loc.ptr);
         (*if_loc.ptr).number = relative.number;
 
+      } else if(!strcmp(token,"begin")){
+        word_t word;
+        word.ptr = compiled+compiled_top;
+        stack_push(&data_stack,word); 
+      } else if(!strcmp(token,"until")){
+        word_t begin_loc = stack_pop(&data_stack);  // get the begin locationa
+        compiled[compiled_top++].number = COND_BRANCH;
+        word_t relative;
+        relative.ptr = (union word_t_union *) (compiled+compiled_top-begin_loc.ptr);
+        compiled[compiled_top++].number = 0-relative.number;
       } else if(!strcmp(token,";")){
         word_t word;
         word.ptr = compile(token);
