@@ -147,14 +147,13 @@ void run_token(char *token){
 
       } else if(!strcmp(token,"begin")){
         word_t word;
-        word.ptr = compiled+compiled_top;
+        word.number = compiled_top;
         stack_push(&data_stack,word); 
       } else if(!strcmp(token,"until")){
         word_t begin_loc = stack_pop(&data_stack);  // get the begin locationa
         compiled[compiled_top++].number = COND_BRANCH;
-        word_t relative;
-        relative.ptr = (union word_t_union *) (compiled+compiled_top-begin_loc.ptr);
-        compiled[compiled_top++].number = 0-relative.number;
+        compiled[compiled_top].number = 0-(compiled_top-begin_loc.number);
+        compiled_top++;
       } else if(!strcmp(token,";")){
         word_t word;
         word.ptr = compile(token);
