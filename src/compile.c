@@ -22,11 +22,14 @@ static int all_digits(char *token){
   return 1;
 }
 
-word_t *compile(char *token){
+void compile(){
   word_t word;
   word_t *existing_words;
+
+  word = stack_pop(&data_stack);
+  char *token = word.char_ptr;
+
   compiled_top = 0;
-  word.char_ptr = token;
 
   stack_push(&data_stack,word);
   search_dictionary();
@@ -45,5 +48,6 @@ word_t *compile(char *token){
     printf(" compile problem ");
   }
   compiled[compiled_top++].number = 0;
-  return compiled;
+  word.ptr = compiled;
+  stack_push(&data_stack,word);
 }

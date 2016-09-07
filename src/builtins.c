@@ -9,6 +9,10 @@
 #include "compile.h"
 #include "io.h"
 
+void run_token();
+void compile();
+void execute();
+
 #define MAX_WORDS_IN_DEFINE 50
 
 void run_native(){
@@ -178,6 +182,7 @@ void copy_return_stack(){
   stack_push(&return_stack,value);
 }
 
+
 void builtins_init(){
   define_builtin(".s",stack_dot_s);
   define_builtin("+",plus);
@@ -201,4 +206,7 @@ void builtins_init(){
   define_builtin(">r",data_to_return_stack);
   define_builtin("r>",return_to_data_stack);
   define_builtin("r@",copy_return_stack);
+  define_builtin("run_token",run_token);
+  define_builtin("compile",compile);
+  define_builtin("execute",execute);
 }

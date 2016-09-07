@@ -50,10 +50,10 @@ char composed[][80] = {
    {": rot3 rot rot rot ;"}
   ,{": +! dup @ rot + swap ! ;"}
   ,{": quadratic >r swap rot r@ * + r> * + ;"}
+  ,{": boot begin read run_token 0 until ;"}
   ,{0}
 };
-
-void run_token(char *);
+void run_token();
 void run_line(char *);
 void load_composed();
 void read();
@@ -70,16 +70,15 @@ int main(){
 
   set_raw_tty();
   state = STATE_EXECUTE;
-  while(1){
+  word_t word;
 
-    word_t word;
-    //word.ptr = compile("read");
-    //execute(word);
-    read();
-    word = stack_pop(&data_stack);
+  word.char_ptr = "boot";
+  stack_push(&data_stack,word);
+  compile();
+  word.ptr = stack_pop(&data_stack).ptr;
 
-    run_token(word.char_ptr);
-  }
+  stack_push(&data_stack,word);
+  execute();
 }
 
 void load_composed(){
@@ -91,22 +90,36 @@ void load_composed(){
 }
 
 void run_line(char *line){
+  word_t word;
   char *token;
   token = strtok(line," ");
   do{
-    run_token(token);
+    word.char_ptr = token;
+    stack_push(&data_stack,word);
+    run_token();
   } while ((token = strtok(NULL," ")) != NULL);
 }
 
-void run_token(char *token){
+void run_token(){
+  word_t word;
+
+  word = stack_pop(&data_stack);
+  char *token = word.char_ptr;
+
   if(!token){
     bye();
   }
   if(state == STATE_EXECUTE){
     word_t word;
-    word.ptr = compile(token);
+
+    word.char_ptr = token;
+    stack_push(&data_stack,word);
+    compile();
+    word.ptr = stack_pop(&data_stack).ptr;
+
     stack_push(&data_stack,word);
     execute();
+
   } else {
     if(verb_needed){
       verb = (char *)heap_get(strlen(token)+1);
@@ -156,16 +169,27 @@ void run_token(char *token){
         compiled_top++;
       } else if(!strcmp(token,";")){
         word_t word;
-        word.ptr = compile(token);
+
+        word.char_ptr = token;
+        stack_push(&data_stack,word);
+        compile();
+        word.ptr = stack_pop(&data_stack).ptr;
+
         stack_push(&data_stack,word);
         execute();
+
       } else {
-        word_t *words = compile(token);
-        while((*words).number != 0){
-          compiled[compiled_top++] = *words;
-          words++;
-          compiled[compiled_top++] = *words;
-          words++;
+        word_t word;
+        word.char_ptr = token;
+        stack_push(&data_stack,word);
+        compile();
+        word_t words;
+        words.ptr = stack_pop(&data_stack).ptr;
+        while((*words.ptr).number != 0){
+          compiled[compiled_top++] = *words.ptr;
+          words.ptr++;
+          compiled[compiled_top++] = *words.ptr;
+          words.ptr++;
         }
       }
       if(compiled_top > MAX_WORDS_IN_DEFINE){
