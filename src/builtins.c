@@ -8,8 +8,8 @@
 #include "heap.h"
 #include "compile.h"
 #include "io.h"
+#include "run.h"
 
-void run_token();
 void compile();
 void execute();
 
@@ -203,10 +203,12 @@ void builtins_init(){
   define_builtin(".",dot);
   define_builtin("read",read);
   define_builtin("emit",emit);
+  define_builtin(":",define);
+  define_builtin(";",define_end);
   define_builtin(">r",data_to_return_stack);
   define_builtin("r>",return_to_data_stack);
   define_builtin("r@",copy_return_stack);
-  define_builtin("run_token",run_token);
+  define_builtin("run",run);
   define_builtin("compile",compile);
   define_builtin("execute",execute);
 }

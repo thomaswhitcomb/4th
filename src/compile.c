@@ -21,6 +21,8 @@ static int all_digits(char *token){
   }
   return 1;
 }
+void push_literal() {
+}
 
 void compile(){
   word_t word;

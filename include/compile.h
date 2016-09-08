@@ -3,5 +3,6 @@
 #include "common.h"
 
 void compile();
+void push_literal();
 
 #endif

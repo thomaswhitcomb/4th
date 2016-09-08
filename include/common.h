@@ -25,6 +25,4 @@ typedef union word_t_union {
   char *char_ptr;
 } word_t;
 
-void push_literal(word_t word);
-
 #endif
