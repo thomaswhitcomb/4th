@@ -16,10 +16,14 @@ void run_line(char *);
 int load_composed();
 void read();
 
+char boot[] = {": boot begin read run 0 until ;"};
+char *boot_word = "boot";
+
 int main(){
   printf("word_t size is %lu. begin...\n",sizeof(word_t));
 
   builtins_init();
+  run_line(boot);
   if(load_composed()){
     puts("Cannot open 4th.conf");
     bye();
@@ -28,7 +32,7 @@ int main(){
   set_raw_tty();
 
   word_t word;
-  word.char_ptr = "boot";
+  word.char_ptr = boot_word;
   stack_push(&data_stack,word);
   compile();
   word.ptr = stack_pop(&data_stack).ptr;
