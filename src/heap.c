@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "common.h"
 
-#define WORD_HEAP_SIZE 500
+#define WORD_HEAP_SIZE 600
 #define BYTE_HEAP_SIZE 1024
 
 static word_t word_heap[WORD_HEAP_SIZE];
