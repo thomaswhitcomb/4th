@@ -28,7 +28,7 @@ void read(){
 
 void dot(){
   word_t x = stack_pop(&data_stack);
-  printf(" %lu",x.number);
+  printf(" %ld",x.number);
 }
 
 void drop(){
@@ -38,6 +38,26 @@ void dup(){
   word_t x = stack_pop(&data_stack);
   stack_push(&data_stack,x);
   stack_push(&data_stack,x);
+}
+void equal(){
+  word_t x = stack_pop(&data_stack);
+  word_t y = stack_pop(&data_stack);
+  word_t si;
+  si.number = x.number == y.number ? 1 : 0;
+  stack_push(&data_stack,si);
+}
+void lt(){
+  word_t x = stack_pop(&data_stack);
+  word_t y = stack_pop(&data_stack);
+  word_t si;
+  si.number = y.number < x.number ? 1 : 0;
+  stack_push(&data_stack,si);
+}
+void not(){
+  word_t x = stack_pop(&data_stack);
+  word_t si;
+  si.number = x.number == 0 ? 1 : 0;
+  stack_push(&data_stack,si);
 }
 void plus(){
   word_t x = stack_pop(&data_stack);
@@ -188,6 +208,9 @@ void builtins_init(){
   define_builtin("+",plus);
   define_builtin("*",times);
   define_builtin("-",minus);
+  define_builtin("=",equal);
+  define_builtin("<",lt);
+  define_builtin("not",not);
   define_builtin("mod",modulo);
   define_builtin("drop",drop);
   define_builtin("dup",dup);

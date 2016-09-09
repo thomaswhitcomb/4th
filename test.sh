@@ -25,3 +25,5 @@ echo ": +! dup @ rot + swap ! ; variable xyz 3 xyz ! 6 xyz +! xyz @ .s" | ./4th 
 echo ": beginloop 5 begin 1 - dup 42 emit if 0 else 1 then until ; beginloop" |./4th | if egrep -q '^ \*\*\*\*\* ok' ; then echo yes; else echo no; fi
 
 echo "2 7 9 3 quadratic .s" |./4th | if egrep -q '^  <1> 48 ok' ; then echo yes; else echo no; fi
+echo "20 factorial .s" |./4th | if egrep -q '^  <1> 2432902008176640000 ok' ; then echo yes; else echo no; fi
+echo "0 factorial .s" |./4th | if egrep -q '^  <1> 1 ok' ; then echo yes; else echo no; fi

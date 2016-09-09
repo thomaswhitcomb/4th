@@ -12,7 +12,7 @@
 #define RUN_NATIVE 4L
 
 #define MAX_TOKEN_SIZE 15
-#define MAX_LINE_SIZE 72
+#define MAX_LINE_SIZE 255
 
 extern void bye();
 
