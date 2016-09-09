@@ -15,6 +15,8 @@ stack_tt return_stack = {.top = -1};
 char composed[][80] = {
    {": rot3 rot rot rot ;"}
   ,{": +! dup @ rot + swap ! ;"}
+  ,{": inc 1 + ;"}
+  ,{": dec 1 - ;"}
   ,{": quadratic >r swap rot r@ * + r> * + ;"}
   ,{": boot begin read run 0 until ;"}
   ,{0}
