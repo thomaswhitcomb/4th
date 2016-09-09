@@ -8,7 +8,7 @@ typedef struct {
   word_t *words;
 } dict_entry;
 
-void add_dictionary_entry(char *verb,word_t *words);
-word_t *search_dictionary(char *verb);
+void add_dictionary_entry();
+void search_dictionary();
 
 #endif

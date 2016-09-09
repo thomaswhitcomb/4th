@@ -3,13 +3,11 @@
 #include <string.h>
 #include "common.h"
 #include "stack.h"
-#include "builtins.h"
+#include "execute.h"
 
-int state;
-void execute(word_t words);
-
-void execute(word_t x){
-  word_t *words = x.ptr;
+void execute(){
+  word_t word = stack_pop(&data_stack);
+  word_t *words = word.ptr;
 
 #ifdef DEBUG
   word_t *loc = words;
@@ -26,7 +24,7 @@ void execute(word_t x){
     switch((*words).number) {
       case COND_BRANCH :
         words++; //step past the literal
-        word_t w = stack_pop();
+        word_t w = stack_pop(&data_stack);
         if(w.number == 0) words = words + ((*words).number);
         else words++;
         break;
@@ -35,7 +33,8 @@ void execute(word_t x){
         words = words + ((*words).number);
         break;
       default :
-        (*words).run(*(words+1));
+        stack_push(&data_stack,*(words+1));
+        (*words).code();
         words = words + 2;
     }
   }

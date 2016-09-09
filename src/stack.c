@@ -3,27 +3,23 @@
 #include "common.h"
 #include "stack.h"
 
-#define STACK_SIZE 50
-static word_t stack[STACK_SIZE];
-static int top = -1;
-
-void stack_push(word_t item){
-  top ++;
-  if(top >= STACK_SIZE){
-    fprintf(stderr, "Stack full. %d elements\n",top);
-    exit(EXIT_FAILURE);
+void stack_push(stack_tt *stack,word_t item){
+  stack->top ++;
+  if(stack->top >= STACK_SIZE){
+    fprintf(stderr, "Stack full. %d elements\n",stack->top);
+    bye();
   }
-  stack[top] = item;
+  stack->stack[stack->top] = item;
 }
-word_t stack_pop(){
-  word_t si  = stack[top];
-  top--;
+word_t stack_pop(stack_tt *stack){
+  word_t si  = stack->stack[stack->top];
+  stack->top--;
   return si;
 }
 
-void stack_dot_s(){
-  printf(" <%d>",top+1);
-  for(int i=0;i<=top;i++){
-    printf(" %lu",stack[i].number);
+void stack_print(stack_tt *stack){
+  printf(" <%d>",(stack->top)+1);
+  for(int i=0;i<=stack->top;i++){
+    printf(" %lu",stack->stack[i].number);
   }
 }

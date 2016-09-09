@@ -7,8 +7,6 @@
 #define STATE_EXECUTE 1
 #define STATE_COMPILE 2
 
-extern int state;
-
 #define COND_BRANCH 2L
 #define UNCOND_BRANCH 3L
 #define RUN_NATIVE 4L
@@ -24,7 +22,7 @@ typedef union word_t_union {
   long number;
   union word_t_union *ptr;
   native_sig code;
-  void (*run)(union word_t_union value);
+  char *char_ptr;
 } word_t;
 
 #endif
