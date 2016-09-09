@@ -12,12 +12,15 @@
 stack_tt data_stack = {.top = -1};
 stack_tt return_stack = {.top = -1};
 
-char composed[][80] = {
+char composed[][140] = {
    {": rot3 rot rot rot ;"}
   ,{": +! dup @ rot + swap ! ;"}
+  ,{": star 42 emit ;"}
+  ,{": 2dup over over ;"}
   ,{": inc 1 + ;"}
   ,{": dec 1 - ;"}
   ,{": quadratic >r swap rot r@ * + r> * + ;"}
+  ,{": factorial dup 2 < if drop 1 else 1 swap begin 2dup * rot drop swap 1 - dup 1 = until drop then ;"}
   ,{": boot begin read run 0 until ;"}
   ,{0}
 };
@@ -26,7 +29,7 @@ void load_composed();
 void read();
 
 int main(){
-  printf("word_t size is %lu\n",sizeof(word_t));
+  printf("word_t size is %lu. begin...\n",sizeof(word_t));
 
   builtins_init();
   load_composed();

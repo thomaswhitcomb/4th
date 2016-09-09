@@ -20,6 +20,6 @@ word_t stack_pop(stack_tt *stack){
 void stack_print(stack_tt *stack){
   printf(" <%d>",(stack->top)+1);
   for(int i=0;i<=stack->top;i++){
-    printf(" %lu",stack->stack[i].number);
+    printf(" %ld",stack->stack[i].number);
   }
 }
