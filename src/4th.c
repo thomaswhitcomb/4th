@@ -12,25 +12,18 @@
 stack_tt data_stack = {.top = -1};
 stack_tt return_stack = {.top = -1};
 
-char composed[][140] = {
-   {": rot3 rot rot rot ;"}
-  ,{": +! dup @ rot + swap ! ;"}
-  ,{": star 42 emit ;"}
-  ,{": 2dup over over ;"}
-  ,{": quadratic >r swap rot r@ * + r> * + ;"}
-  ,{": factorial dup 2 < if drop 1 else 1 swap begin 2dup * rot drop swap 1 - dup 1 = until drop then ;"}
-  ,{": boot begin read run 0 until ;"}
-  ,{0}
-};
 void run_line(char *);
-void load_composed();
+int load_composed();
 void read();
 
 int main(){
   printf("word_t size is %lu. begin...\n",sizeof(word_t));
 
   builtins_init();
-  load_composed();
+  if(load_composed()){
+    puts("Cannot open 4th.conf");
+    bye();
+  }
 
   set_raw_tty();
 
@@ -44,12 +37,32 @@ int main(){
   execute();
 }
 
-void load_composed(){
-  int i = 0;
-  while(composed[i][0] != 0){
-    run_line(composed[i]);
-    i=i+1;
+int load_composed(){
+  FILE * fp;
+  char * line = NULL;
+  size_t len = 0;
+  ssize_t read;
+
+  fp = fopen("4th.conf", "r");
+  if (fp == NULL)
+    return 1;
+
+  while ((read = getline(&line, &len, fp)) != -1) {
+    // remove the newline
+    for(int i=len;i>0;i--){
+      if(line[i] == '\n'){
+        line[i]='\0';
+        break;
+      }
+    }
+    run_line(line);
   }
+
+  if (line)
+    free(line);
+  fclose(fp);
+
+  return 0;
 }
 
 void run_line(char *line){
