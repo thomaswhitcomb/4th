@@ -148,16 +148,6 @@ void get(){
   stack_push(&data_stack,w);
 }
 
-void inc() {
-  word_t value = stack_pop(&data_stack);
-  value.number = value.number + 1;
-  stack_push(&data_stack,value);
-}
-void dec() {
-  word_t value = stack_pop(&data_stack);
-  value.number = value.number - 1;
-  stack_push(&data_stack,value);
-}
 void emit() {
   word_t value = stack_pop(&data_stack);
   printf("%c",(int)value.number);
@@ -205,6 +195,9 @@ void copy_return_stack(){
 
 void builtins_init(){
   define_builtin(".s",stack_dot_s);
+  define_builtin("read",read);
+  define_builtin("emit",emit);
+
   define_builtin("+",plus);
   define_builtin("*",times);
   define_builtin("-",minus);
@@ -212,26 +205,27 @@ void builtins_init(){
   define_builtin("<",lt);
   define_builtin("not",not);
   define_builtin("mod",modulo);
+
   define_builtin("drop",drop);
   define_builtin("dup",dup);
   define_builtin("swap",swap);
   define_builtin("over",over);
   define_builtin("rot",rot);
+  define_builtin(".",dot);
+
   define_builtin("variable",variable);
   define_builtin("!",put);
   define_builtin("@",get);
-  define_builtin("inc",inc);
-  define_builtin("dec",dec);
-  define_builtin("bye",bye);
-  define_builtin(".",dot);
-  define_builtin("read",read);
-  define_builtin("emit",emit);
   define_builtin(":",define);
   define_builtin(";",define_end);
+
   define_builtin(">r",data_to_return_stack);
   define_builtin("r>",return_to_data_stack);
   define_builtin("r@",copy_return_stack);
+
   define_builtin("run",run);
   define_builtin("compile",compile);
   define_builtin("execute",execute);
+
+  define_builtin("bye",bye);
 }
