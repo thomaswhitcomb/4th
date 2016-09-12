@@ -43,27 +43,26 @@ int main(){
 
 int load_composed(){
   FILE * fp;
-  char * line = NULL;
+  char line[255];
   size_t len = 0;
   ssize_t read;
+  int ch;
+  int loc = 0;
 
   fp = fopen("4th.conf", "r");
   if (fp == NULL)
     return 1;
 
-  while ((read = getline(&line, &len, fp)) != -1) {
-    // remove the newline
-    for(int i=len;i>0;i--){
-      if(line[i] == '\n'){
-        line[i]='\0';
-        break;
-      }
+  while ((ch = getc(fp)) != EOF) {
+    if(ch != '\n'){
+      line[loc++] = ch;
+    } else{
+      line[loc++] = '\0';
+      run_line(line);
+      loc = 0;
     }
-    run_line(line);
   }
 
-  if (line)
-    free(line);
   fclose(fp);
 
   return 0;
