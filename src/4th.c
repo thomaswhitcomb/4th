@@ -29,8 +29,8 @@ int main(){
     bye();
   }
 
-  printf("word_t size is %lu.\n",sizeof(word_t));
-  puts("ready");
+  printf("word_t size is %lu\n",sizeof(word_t));
+  puts("ready (\033[1;32mbye\033[0m to exit)");
   set_raw_tty();
 
   word_t word;
