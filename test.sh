@@ -27,3 +27,7 @@ echo ": beginloop 5 begin 1 - dup 42 emit if 0 else 1 then until ; beginloop" |.
 echo "2 7 9 3 quadratic .s" |./4th | if egrep -q '^ <1> 48 ok' ; then echo yes; else echo no; fi
 echo "20 factorial .s" |./4th | if egrep -q '^ <1> 2432902008176640000 ok' ; then echo yes; else echo no; fi
 echo "0 factorial .s" |./4th | if egrep -q '^ <1> 1 ok' ; then echo yes; else echo no; fi
+
+echo "-33 34 + .s" | ./4th | if egrep -q '^ <1> 1 ok' ; then echo yes; else echo no; fi
+echo "-33 +34 + .s" | ./4th | if egrep -q '^ <1> 1 ok' ; then echo yes; else echo no; fi
+echo "-33 3 + .s" | ./4th | if egrep -q '^ <1> -30 ok' ; then echo yes; else echo no; fi
