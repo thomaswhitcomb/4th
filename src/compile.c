@@ -15,12 +15,14 @@ static word_t compiled[3];
 static int compiled_top = 0;
 
 static int all_digits(char *token){
+  if(*token == '-' || *token == '+') token++;
   while(*token){
     if(!isdigit(*token)) return 0;
     token++;
   }
   return 1;
 }
+
 void push_literal() {
 }
 
