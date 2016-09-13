@@ -12,23 +12,25 @@
 stack_tt data_stack = {.top = -1};
 stack_tt return_stack = {.top = -1};
 
-void run_line(char *);
+void run_list(char *list[]);
 int load_composed();
 void read();
 
-char boot[] = {": boot begin read run 0 until ;"};
+char *boot[] = {":", "boot", "begin", "read", "run", "0","until",";",NULL};
 char *boot_word = "boot";
 
 int main(){
-  printf("word_t size is %lu. begin...\n",sizeof(word_t));
+  puts("loading composed words");
 
   builtins_init();
-  run_line(boot);
+  run_list(boot);
   if(load_composed()){
     puts("Cannot open 4th.conf");
     bye();
   }
 
+  printf("word_t size is %lu.\n",sizeof(word_t));
+  puts("ready");
   set_raw_tty();
 
   word_t word;
@@ -43,39 +45,44 @@ int main(){
 
 int load_composed(){
   FILE * fp;
-  char * line = NULL;
+  char token[MAX_TOKEN_SIZE];
   size_t len = 0;
   ssize_t read;
+  int ch;
 
   fp = fopen("4th.conf", "r");
   if (fp == NULL)
     return 1;
 
-  while ((read = getline(&line, &len, fp)) != -1) {
-    // remove the newline
-    for(int i=len;i>0;i--){
-      if(line[i] == '\n'){
-        line[i]='\0';
-        break;
-      }
+  word_t word;
+  int loc = 0;
+  while ((ch = getc(fp)) != EOF) {
+    if(loc >= MAX_TOKEN_SIZE) {
+      puts("MAX TOKEN SIZE exceeded");
+      bye();
     }
-    run_line(line);
+    if(ch == '\n' || ch == ' ') {
+      token[loc++] = '\0';
+      if(loc >1){
+        word.char_ptr = token;
+        stack_push(&data_stack,word);
+        run();
+      }
+      loc = 0;
+    }
+    else token[loc++] = ch;
   }
 
-  if (line)
-    free(line);
   fclose(fp);
 
   return 0;
 }
 
-void run_line(char *line){
+void run_list(char *list[]){
   word_t word;
-  char *token;
-  token = strtok(line," ");
-  do{
-    word.char_ptr = token;
+  for(int i=0;list[i] != NULL;i++){
+    word.char_ptr = list[i];
     stack_push(&data_stack,word);
     run();
-  } while ((token = strtok(NULL," ")) != NULL);
+  } 
 }
