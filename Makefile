@@ -29,12 +29,7 @@ $(EXE): $(OBJS)
 .PHONY: clean test
 
 test:
-	@echo "=== C files ==="
-	@echo $(CFILES)
-	@echo "=== Headers ==="
-	@echo $(HEADERS)
-	@echo "=== Objects ==="
-	@echo $(OBJS)
+	./test.sh
 clean:
 	rm -f $(OBJS)
 	rm -f $(EXE)
