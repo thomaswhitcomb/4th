@@ -5,6 +5,7 @@
 #include "string.h"
 #include "ctype.h"
 #include "common.h"
+#include "run.h"
 #include "io.h"
 
 static int raw_mode = 0;
@@ -81,7 +82,9 @@ char * io_get_token(){
 char * io_get_line(){
   int i = 0, c;
   if(last_char == 13 || last_char == 10){
-    puts(" ok");
+    if(state == STATE_EXECUTE) puts(" ok");
+    else if(state == STATE_COMPILE) puts(" compiled");
+    else puts(" whoops bad state");
     putchar('\r');
   }
   if(feof(stdin)) return NULL;

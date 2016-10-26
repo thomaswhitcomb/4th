@@ -11,7 +11,7 @@
 
 #define MAX_WORDS_IN_DEFINE 50
 
-static int state = STATE_EXECUTE;
+int state = STATE_EXECUTE;
 static int verb_needed;
 static int compiled_top;
 static char* verb;
