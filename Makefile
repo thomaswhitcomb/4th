@@ -28,7 +28,7 @@ $(EXE): $(OBJS)
 
 .PHONY: clean test
 
-test:
+test: $(EXE)
 	./test.sh
 clean:
 	rm -f $(OBJS)

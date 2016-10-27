@@ -82,8 +82,8 @@ char * io_get_token(){
 char * io_get_line(){
   int i = 0, c;
   if(last_char == 13 || last_char == 10){
-    if(state == STATE_EXECUTE) puts(" ok");
-    else if(state == STATE_COMPILE) puts(" compiled");
+    if(get_state() == STATE_EXECUTE) puts(" ok");
+    else if(get_state() == STATE_COMPILE) puts(" compiled");
     else puts(" whoops bad state");
     putchar('\r');
   }

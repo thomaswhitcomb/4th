@@ -11,15 +11,22 @@
 
 #define MAX_WORDS_IN_DEFINE 50
 
-int state = STATE_EXECUTE;
+static int state = STATE_EXECUTE;
 static int verb_needed;
 static int compiled_top;
 static char* verb;
 static word_t *compiled = NULL;
 
+int get_state(){
+  return state;
+}
+void set_state(int s){
+  state = s;
+}
+
 void define_end(){
   word_t word;
-  state = STATE_EXECUTE;
+  set_state(STATE_EXECUTE);
 
   word.ptr = compiled;
   stack_push(&data_stack,word);
@@ -31,7 +38,7 @@ void define_end(){
 }
 
 void define(){
-  state = STATE_COMPILE;
+  set_state(STATE_COMPILE);
   compiled_top = 0;
   compiled = heap_get_words(MAX_WORDS_IN_DEFINE);
   verb_needed = 1;
@@ -46,7 +53,7 @@ void run(){
   if(!token){
     bye();
   }
-  if(state == STATE_EXECUTE){
+  if(get_state() == STATE_EXECUTE){
     word_t word;
 
     word.char_ptr = token;
