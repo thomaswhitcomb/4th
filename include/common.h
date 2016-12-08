@@ -4,9 +4,6 @@
 #define DEBUG 1
 #undef DEBUG
 
-#define STATE_EXECUTE 1
-#define STATE_COMPILE 2
-
 #define COND_BRANCH 2L
 #define UNCOND_BRANCH 3L
 #define RUN_NATIVE 4L

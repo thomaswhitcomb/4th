@@ -5,7 +5,7 @@
 #include "string.h"
 #include "ctype.h"
 #include "common.h"
-#include "run.h"
+#include "state.h"
 #include "io.h"
 
 static int raw_mode = 0;

@@ -7,22 +7,15 @@
 #include "heap.h"
 #include "compile.h"
 #include "execute.h"
+#include "state.h"
 #include "run.h"
 
 #define MAX_WORDS_IN_DEFINE 50
 
-static int state = STATE_EXECUTE;
 static int verb_needed;
 static int compiled_top;
 static char* verb;
 static word_t *compiled = NULL;
-
-int get_state(){
-  return state;
-}
-void set_state(int s){
-  state = s;
-}
 
 void define_end(){
   word_t word;
