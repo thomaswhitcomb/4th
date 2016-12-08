@@ -47,7 +47,7 @@ int load_composed(){
   FILE * fp;
   char token[MAX_TOKEN_SIZE];
   size_t len = 0;
-  ssize_t read;
+  size_t read;
   int ch;
 
   fp = fopen("4th.conf", "r");
