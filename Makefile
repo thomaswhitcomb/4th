@@ -6,7 +6,7 @@ SDIR=src
 
 EXE=4th
 CC=gcc
-CFLAGS=-I$(IDIR)
+CFLAGS=-std=c99 -I$(IDIR)
 LIBS=-lm
 
 ENSUREBUILDDIR = $(shell test -d $(ODIR) || mkdir $(ODIR))
